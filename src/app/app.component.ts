@@ -1,20 +1,30 @@
-import {AfterViewInit, Component, OnInit, ViewChildren} from '@angular/core';
-import { gsap } from "gsap";
+import {AfterViewInit, Component} from '@angular/core';
+import {ReplaySubject} from "rxjs";
 
-type Item = { id: number, color: string, text: string };
+export type Item = { id: number, color: string, text: string };
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, AfterViewInit {
-  public items!: Item[];
+export class AppComponent implements AfterViewInit {
+  public subject = new ReplaySubject<Item>;
 
-  public currentItem!: Item;
+  ngAfterViewInit(): void {
+    setInterval(() => {
+      let item = this.createItem();
+      console.log('create item: ', item);
+      this.subject.next(item);
+    }, 4000);
+  }
 
-  ngOnInit(): void {
-    this.items = [
+  private createColor() {
+    return '#' + (Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, '0'));
+  }
+
+  private createText = (function (){
+    const text = [
       "你的智商不足以点亮一盏小夜灯。",
       "你的脑子像个芝士蛋糕，里面充满了空洞。",
       "你的样子就像是被狗啃过的骨头。",
@@ -23,36 +33,23 @@ export class AppComponent implements OnInit, AfterViewInit {
       "你就像个小丑，每次说话都是在放屁。",
       "你的声音像是被细小的老鼠啃噬过的。",
       "你的形象就像是被车轮碾过的果酱。"
-    ].map((text, id) => ({ text, id, color: this.coloring()}));
-    this.currentItem = this.items[this.items.length - 2];
-  }
+    ];
+    return () => {
+      const index = Math.floor(Math.random() * text.length);
+      return text[index];
+    }
+  })()
 
-  ngAfterViewInit(): void {
-    gsap.defaults({ duration: 1, ease: 'ease-in-out' })
-    setInterval(() => {
-      gsap.to('.rolling-container .round', { x: '-3em' })
-      gsap.to('.rolling-container .round:first-child', { opacity: 0})
-      gsap.to('.content', { opacity: 0, onComplete: () => {
-          this.currentItem = this.items[this.items.length - 1];
-          gsap.to('.rolling-container .round:last-child', { opacity: 1, delay: 0.5 });
-          gsap.to('.content', { opacity: 1, delay: 0.5, onComplete: () => {
-              let item = this.items.shift();
-              if (item) {
-                this.items.push(item);
-              }
-              gsap.set('.rolling-container .round:first-child', {opacity: 1});
-              gsap.set('.rolling-container .round:last-child', {opacity: 0});
-              gsap.set('.rolling-container .round', {x: 0});
-          }});
-      }});
-    }, 3000);
-  }
+  private createId = (function (){
+    let id = 0;
+    return () => id++;
+  })()
 
-  private coloring() {
-    return '#' + (Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, '0'))
-  }
-
-  trackFn(index: number, item: Item) {
-    return item.id;
+  private createItem(): Item {
+    return {
+      id: this.createId(),
+      text: this.createText(),
+      color: this.createColor()
+    }
   }
 }

@@ -1,0 +1,11 @@
+<div class="rolling">
+  <ng-container *ngFor="let item of items; let last = last; trackBy: trackFn">
+    <span class="round" [style.background-color]="item.color" [style.opacity]="0"></span>
+  </ng-container>
+</div>
+<div class="content">
+  <ng-container *ngIf="currentItem">
+    <span class="round" [style.background-color]="currentItem.color"></span>
+    <div>{{ currentItem.text }}</div>
+  </ng-container>
+</div>

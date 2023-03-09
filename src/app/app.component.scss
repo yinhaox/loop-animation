@@ -9,28 +9,6 @@
     background-color: white;
     margin: 3em auto;
     padding: 3em;
-
-    .rolling-container {
-      height: 70%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .content {
-      height: 30%;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-    }
-
-    .round {
-      border-radius: 50%;
-      width: 2em;
-      height: 2em;
-      margin: 0 .5em;
-      display: inline-block;
-    }
   }
 }
 

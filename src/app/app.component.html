@@ -1,14 +1,8 @@
 <div class="container">
   <h1 [style.color]="'white'">Hello Loop</h1>
   <div class="card">
-    <div class="rolling-container">
-      <ng-container *ngFor="let item of items; let last = last; trackBy: trackFn">
-        <span class="round" [style.background-color]="item.color" [style.opacity]="last ? 0 : 1"></span>
-      </ng-container>
-    </div>
-    <div class="content">
-      <span class="round" [style.background-color]="currentItem.color"></span>
-      <div>{{ currentItem.text }}</div>
-    </div>
+    <app-gsap-demo
+      [subject]="subject"
+    ></app-gsap-demo>
   </div>
 </div>
